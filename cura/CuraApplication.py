@@ -1,28 +1,21 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-import platform
-
 from UM.Qt.QtApplication import QtApplication
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Camera import Camera
 from UM.Scene.Platform import Platform
 from UM.Math.Vector import Vector
-from UM.Math.Matrix import Matrix
 from UM.Math.Quaternion import Quaternion
+from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Resources import Resources
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Mesh.WriteMeshJob import WriteMeshJob
 from UM.Mesh.ReadMeshJob import ReadMeshJob
 from UM.Logger import Logger
 from UM.Preferences import Preferences
-from UM.Message import Message
-from UM.PluginRegistry import PluginRegistry
 from UM.JobQueue import JobQueue
-from UM.Math.Polygon import Polygon
 
-from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Scene.Selection import Selection
 from UM.Scene.GroupDecorator import GroupDecorator
 
@@ -42,13 +35,12 @@ from . import MultiMaterialDecorator
 from . import ZOffsetDecorator
 from . import CuraSplashScreen
 
-from PyQt5.QtCore import pyqtSlot, QUrl, Qt, pyqtSignal, pyqtProperty, QEvent, Q_ENUMS
+from PyQt5.QtCore import pyqtSlot, QUrl, pyqtSignal, pyqtProperty, QEvent, Q_ENUMS
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtQml import qmlRegisterUncreatableType
 
 import platform
 import sys
-import os
 import os.path
 import numpy
 import copy
@@ -56,8 +48,10 @@ numpy.seterr(all="ignore")
 
 if platform.system() == "Linux": # Needed for platform.linux_distribution, which is not available on Windows and OSX
     # For Ubuntu: https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
-    if platform.linux_distribution()[0] in ("Ubuntu", ): # Just in case it also happens on Debian, so it can be added
-        from OpenGL import GL
+    if platform.linux_distribution()[0] in ("Ubuntu", ): # TODO: Needs a "if X11_GFX == 'nvidia'" here. The workaround is only needed on Ubuntu+NVidia drivers. Other drivers are not affected, but fine with this fix.
+        import ctypes
+        from ctypes.util import find_library
+        ctypes.CDLL(find_library('GL'), ctypes.RTLD_GLOBAL)
 
 try:
     from cura.CuraVersion import CuraVersion
@@ -74,6 +68,8 @@ class CuraApplication(QtApplication):
         Resources.addSearchPath(os.path.join(QtApplication.getInstallPrefix(), "share", "cura"))
         if not hasattr(sys, "frozen"):
             Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
+
+        self._open_file_queue = [] #Files to open when plug-ins are loaded.
 
         super().__init__(name = "cura", version = CuraVersion)
 
@@ -97,11 +93,14 @@ class CuraApplication(QtApplication):
         self._i18n_catalog = None
         self._previous_active_tool = None
         self._platform_activity = False
+        self._scene_boundingbox = AxisAlignedBox()
         self._job_name = None
+        self._center_after_select = False
 
         self.getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self.getMachineManager().addMachineRequested.connect(self._onAddMachineRequested)
         self.getController().getScene().sceneChanged.connect(self.updatePlatformActivity)
+        self.getController().toolOperationStopped.connect(self._onToolOperationStopped)
 
         Resources.addType(self.ResourceTypes.QmlFiles, "qml")
         Resources.addType(self.ResourceTypes.Firmware, "firmware")
@@ -112,6 +111,7 @@ class CuraApplication(QtApplication):
         Preferences.getInstance().addPreference("cura/categories_expanded", "")
         Preferences.getInstance().addPreference("view/center_on_select", True)
         Preferences.getInstance().addPreference("mesh/scale_to_fit", True)
+        Preferences.getInstance().setDefault("local_file/last_used_type", "text/x-gcode")
 
         JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
@@ -122,6 +122,10 @@ class CuraApplication(QtApplication):
                 continue
 
             self._recent_files.append(QUrl.fromLocalFile(f))
+
+    @pyqtSlot(result = QUrl)
+    def getDefaultPath(self):
+        return QUrl.fromLocalFile(os.path.expanduser("~/"))
     
     ##  Handle loading of all plugin types (and the backend explicitly)
     #   \sa PluginRegistery
@@ -130,11 +134,14 @@ class CuraApplication(QtApplication):
         if not hasattr(sys, "frozen"):
             self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
             self._plugin_registry.loadPlugin("ConsoleLogger")
+            self._plugin_registry.loadPlugin("CuraEngineBackend")
 
         self._plugin_registry.loadPlugins()
 
         if self.getBackend() == None:
             raise RuntimeError("Could not load the backend plugin!")
+
+        self._plugins_loaded = True
 
     def addCommandLineOptions(self, parser):
         super().addCommandLineOptions(parser)
@@ -142,9 +149,6 @@ class CuraApplication(QtApplication):
         parser.add_argument("--debug", dest="debug-mode", action="store_true", default=False, help="Enable detailed crash reports.")
 
     def run(self):
-        if "PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION" not in os.environ or os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] != "cpp":
-            Logger.log("w", "Using Python implementation of Protobuf, expect bad performance!")
-
         self._i18n_catalog = i18nCatalog("cura");
 
         i18nCatalog.setTagReplacements({
@@ -156,7 +160,7 @@ class CuraApplication(QtApplication):
 
         controller = self.getController()
 
-        controller.setActiveView("MeshView")
+        controller.setActiveView("SolidView")
         controller.setCameraTool("CameraTool")
         controller.setSelectionTool("SelectionTool")
 
@@ -171,7 +175,6 @@ class CuraApplication(QtApplication):
 
         self._volume = BuildVolume.BuildVolume(root)
 
-        self.getRenderer().setLightPosition(Vector(0, 150, 0))
         self.getRenderer().setBackgroundColor(QColor(245, 245, 245))
 
         self._physics = PlatformPhysics.PlatformPhysics(controller, self._volume)
@@ -197,13 +200,18 @@ class CuraApplication(QtApplication):
 
             for file in self.getCommandLineOption("file", []):
                 self._openFile(file)
+            for file_name in self._open_file_queue: #Open all the files that were queued up while plug-ins were loading.
+                self._openFile(file_name)
 
             self.exec_()
 
     #   Handle Qt events
     def event(self, event):
         if event.type() == QEvent.FileOpen:
-            self._openFile(event.file())
+            if self._plugins_loaded:
+                self._openFile(event.file())
+            else:
+                self._open_file_queue.append(event.file())
 
         return super().event(event)
 
@@ -228,9 +236,7 @@ class CuraApplication(QtApplication):
                 else:
                     self.getController().setActiveTool("TranslateTool")
             if Preferences.getInstance().getValue("view/center_on_select"):
-                self._camera_animation.setStart(self.getController().getTool("CameraTool").getOrigin())
-                self._camera_animation.setTarget(Selection.getSelectedObject(0).getWorldPosition())
-                self._camera_animation.start()
+                self._center_after_select = True
         else:
             if self.getController().getActiveTool():
                 self._previous_active_tool = self.getController().getActiveTool().getPluginId()
@@ -238,26 +244,51 @@ class CuraApplication(QtApplication):
             else:
                 self._previous_active_tool = None
 
+    def _onToolOperationStopped(self, event):
+        if self._center_after_select:
+            self._center_after_select = False
+            self._camera_animation.setStart(self.getController().getTool("CameraTool").getOrigin())
+            self._camera_animation.setTarget(Selection.getSelectedObject(0).getWorldPosition())
+            self._camera_animation.start()
+
     requestAddPrinter = pyqtSignal()
     activityChanged = pyqtSignal()
+    sceneBoundingBoxChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = activityChanged)
     def getPlatformActivity(self):
         return self._platform_activity
 
+    @pyqtProperty(str, notify = sceneBoundingBoxChanged)
+    def getSceneBoundingBoxString(self):
+        return self._i18n_catalog.i18nc("@info", "%(width).1f x %(depth).1f x %(height).1f mm") % {'width' : self._scene_boundingbox.width.item(), 'depth': self._scene_boundingbox.depth.item(), 'height' : self._scene_boundingbox.height.item()}
+
     def updatePlatformActivity(self, node = None):
         count = 0
+        scene_boundingbox = None
         for node in DepthFirstIterator(self.getController().getScene().getRoot()):
             if type(node) is not SceneNode or not node.getMeshData():
                 continue
 
             count += 1
+            if not scene_boundingbox:
+                scene_boundingbox = copy.deepcopy(node.getBoundingBox())
+            else:
+                scene_boundingbox += node.getBoundingBox()
+
+        if not scene_boundingbox:
+            scene_boundingbox = AxisAlignedBox()
+
+        if repr(self._scene_boundingbox) != repr(scene_boundingbox):
+            self._scene_boundingbox = scene_boundingbox
+            self.sceneBoundingBoxChanged.emit()
 
         self._platform_activity = True if count > 0 else False
         self.activityChanged.emit()
 
     @pyqtSlot(str)
     def setJobName(self, name):
+        name = os.path.splitext(name)[0] #when a file is opened using the terminal; the filename comes from _onFileLoaded and still contains its extension. This cuts the extension off if nescessary.
         if self._job_name != name:
             self._job_name = name
             self.jobNameChanged.emit()
@@ -268,9 +299,28 @@ class CuraApplication(QtApplication):
     def jobName(self):
         return self._job_name
 
-    ##  Remove an object from the scene
+    # Remove all selected objects from the scene.
+    @pyqtSlot()
+    def deleteSelection(self):
+        if not self.getController().getToolsEnabled():
+            return
+
+        op = GroupedOperation()
+        nodes = Selection.getAllSelectedObjects()
+        for node in nodes:
+            op.addOperation(RemoveSceneNodeOperation(node))
+
+        op.push()
+
+        pass
+
+    ##  Remove an object from the scene.
+    #   Note that this only removes an object if it is selected.
     @pyqtSlot("quint64")
     def deleteObject(self, object_id):
+        if not self.getController().getToolsEnabled():
+            return
+
         node = self.getController().getScene().findObject(object_id)
 
         if not node and object_id != 0: #Workaround for tool handles overlapping the selected object
@@ -297,7 +347,7 @@ class CuraApplication(QtApplication):
 
         if node:
             op = GroupedOperation()
-            for i in range(count):
+            for _ in range(count):
                 if node.getParent() and node.getParent().callDecoration("isGroup"):
                     new_node = copy.deepcopy(node.getParent()) #Copy the group node.
                     new_node.callDecoration("setConvexHull",None)
@@ -330,6 +380,9 @@ class CuraApplication(QtApplication):
     ##  Delete all mesh data on the scene.
     @pyqtSlot()
     def deleteAll(self):
+        if not self.getController().getToolsEnabled():
+            return
+
         nodes = []
         for node in DepthFirstIterator(self.getController().getScene().getRoot()):
             if type(node) is not SceneNode:
@@ -450,18 +503,18 @@ class CuraApplication(QtApplication):
 
     @pyqtSlot(str, result = "QVariant")
     def getSettingValue(self, key):
-        if not self.getMachineManager().getActiveProfile():
+        if not self.getMachineManager().getWorkingProfile():
             return None
-        return self.getMachineManager().getActiveProfile().getSettingValue(key)
+        return self.getMachineManager().getWorkingProfile().getSettingValue(key)
         #return self.getActiveMachine().getSettingValueByKey(key)
     
     ##  Change setting by key value pair
     @pyqtSlot(str, "QVariant")
     def setSettingValue(self, key, value):
-        if not self.getMachineManager().getActiveProfile():
+        if not self.getMachineManager().getWorkingProfile():
             return
 
-        self.getMachineManager().getActiveProfile().setSettingValue(key, value)
+        self.getMachineManager().getWorkingProfile().setSettingValue(key, value)
         
     @pyqtSlot()
     def mergeSelected(self):
@@ -469,6 +522,7 @@ class CuraApplication(QtApplication):
         try:
             group_node = Selection.getAllSelectedObjects()[0]
         except Exception as e:
+            Logger.log("d", "mergeSelected: Exception:", e)
             return
         multi_material_decorator = MultiMaterialDecorator.MultiMaterialDecorator()
         group_node.addDecorator(multi_material_decorator)
@@ -487,6 +541,7 @@ class CuraApplication(QtApplication):
         group_decorator = GroupDecorator()
         group_node.addDecorator(group_decorator)
         group_node.setParent(self.getController().getScene().getRoot())
+        group_node.setSelectable(True)
         center = Selection.getSelectionCenter()
         group_node.setPosition(center)
         group_node.setCenterPosition(center)
@@ -558,9 +613,9 @@ class CuraApplication(QtApplication):
     def _onFileLoaded(self, job):
         node = job.getResult()
         if node != None:
+            self.setJobName(os.path.basename(job.getFileName()))
             node.setSelectable(True)
             node.setName(os.path.basename(job.getFileName()))
-
             op = AddSceneNodeOperation(node, self.getController().getScene().getRoot())
             op.push()
 

@@ -30,7 +30,7 @@ UM.PreferencesPage
             width: childrenRect.width;
             height: childrenRect.height;
 
-            text: catalog.i18nc("@info:tooltip","Highlight unsupported areas of the model in red. Without support these areas will nog print properly.")
+            text: catalog.i18nc("@info:tooltip","Highlight unsupported areas of the model in red. Without support these areas will not print properly.")
 
             CheckBox
             {
@@ -39,7 +39,7 @@ UM.PreferencesPage
                 checked: boolCheck(UM.Preferences.getValue("view/show_overhang"))
                 onClicked: UM.Preferences.setValue("view/show_overhang",  checked)
 
-                text: catalog.i18nc("@option:check","Display Overhang");
+                text: catalog.i18nc("@option:check","Display overhang");
             }
         }
 

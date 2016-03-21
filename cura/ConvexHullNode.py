@@ -5,9 +5,9 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.Math.Vector import Vector
-from UM.Mesh.MeshData import MeshData
+from UM.Mesh.MeshBuilder import MeshBuilder #To create a mesh to display the convex hull with.
 
-import numpy
+from UM.View.GL.OpenGL import OpenGL
 
 class ConvexHullNode(SceneNode):
     def __init__(self, node, hull, parent = None):
@@ -15,14 +15,15 @@ class ConvexHullNode(SceneNode):
 
         self.setCalculateBoundingBox(False)
 
-        self._material = None
+        self._shader = None
 
         self._original_parent = parent
 
         self._inherit_orientation = False
         self._inherit_scale = False
 
-        self._color = Color(35, 35, 35, 0.5)
+        self._color = Color(35, 35, 35, 128)
+        self._mesh_height = 0.1 #The y-coordinate of the convex hull mesh. Must not be 0, to prevent z-fighting.
 
         self._node = node
         self._node.transformationChanged.connect(self._onNodePositionChanged)
@@ -32,7 +33,7 @@ class ConvexHullNode(SceneNode):
         self._convex_hull_head_mesh = None
         self._hull = hull
 
-        hull_points = self._hull.getPoints()
+        hull_points = self._hull.getPoints() # TODO: @UnusedVariable
         hull_mesh = self.createHullMesh(self._hull.getPoints())
         if hull_mesh:
             self.setMeshData(hull_mesh)
@@ -41,35 +42,32 @@ class ConvexHullNode(SceneNode):
             self._convex_hull_head_mesh = self.createHullMesh(convex_hull_head.getPoints())
 
     def createHullMesh(self, hull_points):
-        mesh = MeshData()
-        if len(hull_points) > 3:
-            center = (hull_points.min(0) + hull_points.max(0)) / 2.0
-            mesh.addVertex(center[0], 0.1, center[1])
-        else:
+        #Input checking.
+        if len(hull_points) < 3:
             return None
-        for point in hull_points:
-            mesh.addVertex(point[0], 0.1, point[1])
-        indices = []
-        for i in range(len(hull_points) - 1):
-            indices.append([0, i + 1, i + 2])
 
-        indices.append([0, mesh.getVertexCount() - 1, 1])
+        mesh_builder = MeshBuilder()
+        point_first = Vector(hull_points[0][0], self._mesh_height, hull_points[0][1])
+        point_previous = Vector(hull_points[1][0], self._mesh_height, hull_points[1][1])
+        for point in hull_points[2:]: #Add the faces in the order of a triangle fan.
+            point_new = Vector(point[0], self._mesh_height, point[1])
+            mesh_builder.addFace(point_first, point_previous, point_new, color = self._color)
+            point_previous = point_new #Prepare point_previous for the next triangle.
 
-        mesh.addIndices(numpy.array(indices, numpy.int32))
-        return mesh
+        return mesh_builder.getData()
 
     def getWatchedNode(self):
         return self._node
 
     def render(self, renderer):
-        if not self._material:
-            self._material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "basic.vert"), Resources.getPath(Resources.Shaders, "color.frag"))
+        if not self._shader:
+            self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
+            self._shader.setUniformValue("u_color", self._color)
 
         if self.getParent():
-            self._material.setUniformValue("u_color", self._color)
-            renderer.queueNode(self, material = self._material, transparent = True)
+            renderer.queueNode(self, transparent = True, shader = self._shader, backface_cull = True, sort = -8)
             if self._convex_hull_head_mesh:
-                renderer.queueNode(self, material = self._material,transparent = True, mesh = self._convex_hull_head_mesh)
+                renderer.queueNode(self, shader = self._shader, transparent = True, mesh = self._convex_hull_head_mesh, backface_cull = True, sort = -8)
 
         return True
 

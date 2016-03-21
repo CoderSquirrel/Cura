@@ -7,7 +7,7 @@
     "icon": "icon_ultimaker.png",
     "platform": "ultimaker2_platform.obj",
     "platform_texture": "UltimakerPlusbackplate.png",
-
+    "file_formats": "text/x-gcode",
     "inherits": "ultimaker_original.json",
 
     "pages": [
@@ -16,7 +16,7 @@
         "BedLeveling"
     ],
 
-    "machine_settings": {
+    "overrides": {
         "machine_heated_bed": { "default": true }
     }
 }

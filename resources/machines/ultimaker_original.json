@@ -6,8 +6,8 @@
     "author": "Ultimaker",
     "icon": "icon_ultimaker.png",
     "platform": "ultimaker_platform.stl",
-
-    "inherits": "fdmprinter.json",
+    "file_formats": "text/x-gcode",
+    "inherits": "ultimaker.json",
 
     "pages": [
         "SelectUpgradedParts",
@@ -16,11 +16,8 @@
         "BedLeveling"
     ],
 
-    "machine_extruder_trains": [
-        {
-            "machine_nozzle_size": {
-                "default": 0.4
-            },
+    "machine_extruder_trains": {
+        "0": {
             "machine_nozzle_heat_up_speed": { 
                 "default": 2.0 
             },
@@ -40,8 +37,8 @@
                 "default": 16
             }
         }
-    ],
-    "machine_settings": {
+    },
+    "overrides": {
         "machine_width": { "default": 205 },
         "machine_height": { "default": 200 },
         "machine_depth": { "default": 205 },

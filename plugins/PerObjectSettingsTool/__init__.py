@@ -4,7 +4,7 @@
 from . import PerObjectSettingsTool
 
 from UM.i18n import i18nCatalog
-i18n_catalog = i18nCatalog("uranium")
+i18n_catalog = i18nCatalog("cura")
 
 def getMetaData():
     return {
@@ -19,7 +19,8 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "Per Object Settings"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Configure Per Object Settings"),
             "icon": "setting_per_object",
-            "tool_panel": "PerObjectSettingsPanel.qml"
+            "tool_panel": "PerObjectSettingsPanel.qml",
+            "weight": 3
         },
     }
 

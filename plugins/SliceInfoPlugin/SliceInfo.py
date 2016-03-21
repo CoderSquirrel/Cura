@@ -44,7 +44,7 @@ class SliceInfo(Extension):
     def _onWriteStarted(self, output_device):
         if not Preferences.getInstance().getValue("info/send_slice_info"):
             return # Do nothing, user does not want to send data
-        settings = Application.getInstance().getMachineManager().getActiveProfile()
+        settings = Application.getInstance().getMachineManager().getWorkingProfile()
 
         # Load all machine definitions and put them in machine_settings dict
         #setting_file_name = Application.getInstance().getActiveMachineInstance().getMachineSettings()._json_file
@@ -66,7 +66,7 @@ class SliceInfo(Extension):
                 break
 
 
-        profile_values = settings.getChangedSettings()
+        profile_values = settings.getChangedSettings() # TODO: @UnusedVariable
 
         # Get total material used (in mm^3)
         print_information = Application.getInstance().getPrintInformation()

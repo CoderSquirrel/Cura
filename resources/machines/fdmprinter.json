@@ -5,87 +5,117 @@
     "name": "FDM Printer Base Description",
     "author": "Ultimaker B.V.",
     "manufacturer": "Ultimaker",
+    "file_formats": "text/x-gcode;application/x-stl-ascii;application/x-stl-binary;application/x-wavefront-obj;application/x3g",
 
     "add_pages": [],
 
     "machine_settings": {
         "machine_start_gcode": {
             "description": "Gcode commands to be executed at the very start - separated by \\n.",
-            "default": "G28 ; Home\nG1 Z15.0 F6000 ;move the platform down 15mm\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0"
+            "default": "G28 ; Home\nG1 Z15.0 F6000 ;move the platform down 15mm\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0",
+            "global_only": true
         },
         "machine_end_gcode": {
             "description": "Gcode commands to be executed at the very end - separated by \\n.",
-            "default": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+            "default": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84",
+            "global_only": true
         },
         "material_bed_temp_wait": {
             "description": "Whether to insert a command to wait until the bed temperature is reached at the start.",
-            "default": true
+            "default": true,
+            "global_only": true
         },
         "material_print_temp_wait": {
             "description": "Whether to insert a command to wait until the nozzle temperatures are reached at the start.",
-            "default": true
+            "default": true,
+            "global_only": true
         },
         "material_print_temp_prepend": {
             "description": "Whether to include nozzle temperature commands at the start of the gcode. When the start_gcode already contains nozzle temperature commands Cura frontend will automatically disable this setting.",
-            "default": true
+            "default": true,
+            "global_only": true
         },
         "material_bed_temp_prepend": {
             "description": "Whether to include bed temperature commands at the start of the gcode. When the start_gcode already contains bed temperature commands Cura frontend will automatically disable this setting.",
-            "default": true
+            "default": true,
+            "global_only": true
         },
         "machine_width": {
             "description": "The width (X-direction) of the printable area.",
-            "default": 100
+            "default": 100,
+            "global_only": true
         },
         "machine_depth": {
             "description": "The depth (Y-direction) of the printable area.",
-            "default": 100
+            "default": 100,
+            "global_only": true
         },
         "machine_height": {
             "description": "The height (Z-direction) of the printable area.",
-            "default": 100
+            "default": 100,
+            "global_only": true
         },
         "machine_heated_bed": {
             "description": "Whether the machine has a heated bed present.",
-            "default": false
+            "default": false,
+            "global_only": true
         },
         "machine_center_is_zero": {
             "description": "Whether the X/Y coordinates of the zero position of the printer is at the center of the printable area.",
-            "default": false
+            "default": false,
+            "global_only": true
         },
         "machine_extruder_count": {
             "description": "Number of extruder trains. An extruder train is the combination of a feeder, bowden tube, and nozzle.",
-            "default": 1
+            "default": 1,
+            "global_only": true
         },
-        "machine_nozzle_size": { 
-            "description": "The inner diameter of the hole in the nozzle.",
-            "default": 0.4, "SEE_machine_extruder_trains": true },
         "machine_nozzle_tip_outer_diameter": { 
             "description": "The outer diameter of the tip of the nozzle.",
-            "default": 1, "SEE_machine_extruder_trains": true  },
+            "default": 1,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_nozzle_head_distance": {
             "description": "The height difference between the tip of the nozzle and the lowest part of the print head.",
-            "default": 3, "SEE_machine_extruder_trains": true  },
+            "default": 3,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_nozzle_expansion_angle": {
             "description": "The angle between the horizontal plane and the conical part right above the tip of the nozzle.",
-            "default": 45, "SEE_machine_extruder_trains": true  },
+            "default": 45,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_heat_zone_length": {
             "description": "The distance from the tip of the nozzle in which heat from the nozzle is transfered to the filament.",
-            "default": 16, "SEE_machine_extruder_trains": true  },
+            "default": 16,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_nozzle_heat_up_speed": {
             "description": "The speed (*C/s) by which the nozzle heats up averaged over the window of normal printing temperatures and the standby temperature.",
-            "default": 2.0, "SEE_machine_extruder_trains": true  },
+            "default": 2.0,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_nozzle_cool_down_speed": { 
             "description": "The speed (*C/s) by which the nozzle cools down averaged over the window of normal printing temperatures and the standby temperature.",
-            "default": 2.0, "SEE_machine_extruder_trains": true  },
+            "default": 2.0,
+            "SEE_machine_extruder_trains": true,
+            "global_only": true
+        },
         "machine_gcode_flavor": {
             "description": "The type of gcode to be generated.",
-            "default": "RepRap"
+            "default": "RepRap",
+            "global_only": true
         },
         "machine_disallowed_areas": {
             "description": "A list of polygons with areas the print head is not allowed to enter.",
             "type": "polygons",
-            "default": []
+            "default": [],
+            "global_only": true
         },
         "machine_platform_offset": {
             "description": "Where to display the platform mesh.",
@@ -93,7 +123,8 @@
                 0,
                 0,
                 0
-            ]
+            ],
+            "global_only": true
         },
         "machine_head_polygon": {
             "description": "A 2D silhouette of the print head.",
@@ -115,7 +146,8 @@
                     1,
                     1
                 ]
-            ]
+            ],
+            "global_only": true
         },
         "machine_head_with_fans_polygon": {
             "description": "A 2D silhouette of the print head.",
@@ -137,14 +169,34 @@
                     -20,
                     -10
                 ]
-            ]
+            ],
+            "global_only": true
         },
         "gantry_height": {
             "description": "The height difference between the tip of the nozzle and the gantry system (X and Y axes).",
-            "default":99999999999
+            "default": 99999999999,
+            "global_only": true
         }
     },
     "categories": {
+        "machine": {
+            "label": "Machine",
+            "visible": true,
+            "icon": "category_machine",
+            "settings": {
+                "machine_nozzle_size": {
+                    "label": "Nozzle Diameter",
+                    "description": "The inner diameter of the nozzle.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.4,
+                    "min_value": "0.001",
+                    "max_value_warning": "10",
+                    "visible": false
+                }
+            },
+            "global_only": true
+        },
         "resolution": {
             "label": "Quality",
             "visible": true,
@@ -158,7 +210,8 @@
                     "default": 0.1,
                     "min_value": "0.001",
                     "min_value_warning": "0.04",
-                    "max_value_warning": "0.32"
+                    "max_value_warning": "0.8 * machine_nozzle_size",
+                    "global_only": "True"
                 },
                 "layer_height_0": {
                     "label": "Initial Layer Height",
@@ -168,8 +221,9 @@
                     "default": 0.3,
                     "min_value": "0.001",
                     "min_value_warning": "0.04",
-                    "max_value_warning": "0.32",
-                    "visible": false
+                    "max_value_warning": "0.8 * machine_nozzle_size",
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "line_width": {
                     "label": "Line Width",
@@ -177,7 +231,7 @@
                     "unit": "mm",
                     "min_value": "0.0001",
                     "min_value_warning": "0.2",
-                    "max_value_warning": "5",
+                    "max_value_warning": "2 * machine_nozzle_size",
                     "default": 0.4,
                     "type": "float",
                     "visible": false,
@@ -227,7 +281,8 @@
                             "max_value_warning": "5",
                             "default": 0.4,
                             "type": "float",
-                            "visible": false
+                            "visible": false, 
+                            "global_only": true
                         },
                         "skin_line_width": {
                             "label": "Top/bottom line width",
@@ -261,16 +316,20 @@
                             "default": 0.4,
                             "type": "float",
                             "visible": false,
-                            "enabled": "support_enable"
+                            "enabled": "support_enable",
+                            "global_only": true
                         },
                         "support_roof_line_width": {
                             "label": "Support Roof line width",
                             "description": "Width of a single support roof line, used to fill the top of the support.",
                             "unit": "mm",
                             "default": 0.4,
+                            "min_value": "0.0001",
+                            "max_value_warning": "machine_nozzle_size * 2",
                             "type": "float",
                             "visible": false,
-                            "enabled": "support_roof_enable"
+                            "enabled": "support_roof_enable",
+                            "global_only": true
                         }
                     }
                 }
@@ -290,6 +349,8 @@
                     "min_value": "0",
                     "min_value_warning": "0.2",
                     "max_value_warning": "5",
+                    "visible": false,
+                    "enabled": "False",
                     "children": {
                         "wall_thickness": {
                             "label": "Wall Thickness",
@@ -297,21 +358,32 @@
                             "unit": "mm",
                             "default": 0.8,
                             "min_value": "0",
-                            "min_value_warning": "0.2",
-                            "max_value_warning": "5",
+                            "min_value_warning": "line_width",
+                            "max_value_warning": "5 * line_width",
                             "type": "float",
-                            "visible": false,
+                            "visible": true,
                             "children": {
                                 "wall_line_count": {
                                     "label": "Wall Line Count",
                                     "description": "Number of shell lines. These lines are called perimeter lines in other tools and impact the strength and structural integrity of your print.",
-                                    "min_value": "0",
                                     "default": 2,
+                                    "min_value": "0",   
                                     "type": "int",
                                     "visible": false,
-                                    "inherit_function": "max(1, round((wall_thickness - wall_line_width_0) / wall_line_width_x) + 1)"
+                                    "inherit_function": "1 if magic_spiralize else max(1, round((wall_thickness - wall_line_width_0) / wall_line_width_x) + 1)"
                                 }
                             }
+                        },
+                        "wall_0_inset": {
+                            "label": "Outer Wall Inset",
+                            "description": "Inset applied to the path of the outer wall. If the outer wall is smaller than the nozzle, and printed after the inner walls, use this offset to get the hole in the nozzle to overlap with the inner walls instead of the outside of the object.",
+                            "unit": "mm",
+                            "type": "float",
+                            "default": 0.0,
+                            "inherit_function": "(machine_nozzle_size - wall_line_width_0) / 2 if wall_line_width_0 < machine_nozzle_size else 0",
+                            "min_value_warning": "0",
+                            "max_value_warning": "machine_nozzle_size",
+                            "visible": false
                         },
                         "alternate_extra_perimeter": {
                             "label": "Alternate Extra Wall",
@@ -330,22 +402,24 @@
                             "max_value": "5",
                             "min_value_warning": "0.6",
                             "type": "float",
-                            "visible": false,
+                            "visible": true,
                             "children": {
                                 "top_thickness": {
                                     "label": "Top Thickness",
                                     "description": "This controls the thickness of the top layers. The number of solid layers printed is calculated from the layer thickness and this value. Having this value be a multiple of the layer thickness makes sense. Keep it near your wall thickness to make an evenly strong part.",
                                     "unit": "mm",
-                                    "min_value": "0",
                                     "default": 0.8,
+                                    "min_value": "0",
+                                    "max_value_warning": "100",
                                     "type": "float",
                                     "visible": false,
                                     "children": {
                                         "top_layers": {
                                             "label": "Top Layers",
                                             "description": "This controls the number of top layers.",
-                                            "min_value": "0",
                                             "default": 8,
+                                            "min_value": "0",
+                                            "max_value_warning": "100",
                                             "type": "int",
                                             "visible": false,
                                             "inherit_function": "0 if infill_sparse_density == 100 else math.ceil(parent_value / layer_height)"
@@ -356,8 +430,8 @@
                                     "label": "Bottom Thickness",
                                     "description": "This controls the thickness of the bottom layers. The number of solid layers printed is calculated from the layer thickness and this value. Having this value be a multiple of the layer thickness makes sense. And keep it near to your wall thickness to make an evenly strong part.",
                                     "unit": "mm",
-                                    "min_value": "0",
                                     "default": 0.6,
+                                    "min_value": "0",
                                     "type": "float",
                                     "visible": false,
                                     "children": {
@@ -376,12 +450,22 @@
                         }
                     }
                 },
+                
+                "alternate_extra_perimeter": {
+                    "label": "Alternate Extra Wall",
+                    "description": "Make an extra wall at every second layer, so that infill will be caught between an extra wall above and one below. This results in a better cohesion between infill and walls, but might have an impact on the surface quality.",
+                    "type": "boolean",
+                    "default": false,
+                    "visible": false,
+                    "inherit": false
+                },
                 "remove_overlapping_walls_enabled": {
                     "label": "Remove Overlapping Wall Parts",
                     "description": "Remove parts of a wall which share an overlap which would result in overextrusion in some places. These overlaps occur in thin pieces in a model and sharp corners.",
                     "type": "boolean",
                     "default": false,
                     "visible": false,
+                    "enabled": "False",
                     "children": {
                         "remove_overlapping_walls_0_enabled": {
                             "label": "Remove Overlapping Outer Wall Parts",
@@ -389,7 +473,8 @@
                             "type": "boolean",
                             "default": false,
                             "visible": false,
-                            "inherit": true
+                            "inherit": true,
+                            "enabled": "False"
                         },
                         "remove_overlapping_walls_x_enabled": {
                             "label": "Remove Overlapping Other Wall Parts",
@@ -405,7 +490,7 @@
                     "label": "Compensate Wall Overlaps",
                     "description": "Compensate the flow for parts of a wall being laid down where there already is a piece of a wall. These overlaps occur in thin pieces in a model. Gcode generation might be slowed down considerably.",
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "visible": false
                 },
                 "fill_perimeter_gaps": {
@@ -451,6 +536,8 @@
                     "label": "Extra Skin Wall Count",
                     "description": "Number of lines around skin regions. Using one or two skin perimeter lines can greatly improve roofs which would start in the middle of infill cells.",
                     "default": 0,
+                    "min_value": "0",
+                    "max_value_warning": "10",
                     "type": "int",
                     "visible": false
                 },
@@ -459,6 +546,8 @@
                     "description": "Amount of offset applied to all polygons in each layer. Positive values can compensate for too big holes; negative values can compensate for too small holes.",
                     "unit": "mm",
                     "type": "float",
+                    "min_value_warning": "-10",
+                    "max_value_warning": "10",
                     "default": 0,
                     "visible": false
                 },
@@ -488,7 +577,7 @@
                     "type": "float",
                     "default": 20,
                     "min_value": "0",
-                    "max_value": "100",
+                    "max_value_warning": "100",
                     "children": {
                         "infill_line_distance": {
                             "label": "Line distance",
@@ -496,6 +585,7 @@
                             "unit": "mm",
                             "type": "float",
                             "default": 2,
+                            "min_value": "0",
                             "visible": false,
                             "inherit_function": "0 if infill_sparse_density == 0 else (infill_line_width * 100) / infill_sparse_density"
                         }
@@ -519,12 +609,12 @@
                 "infill_overlap": {
                     "label": "Infill Overlap",
                     "description": "The amount of overlap between the infill and the walls. A slight overlap allows the walls to connect firmly to the infill.",
-                    "unit": "%",
+                    "unit": "mm",
                     "type": "float",
-                    "default": 10,
-                    "min_value": "0",
-                    "max_value": "100",
-                    "inherit_function": "10 if infill_sparse_density < 95 else 0",
+                    "default": 0.04,
+                    "min_value_warning": "0",
+                    "max_value_warning": "machine_nozzle_size",
+                    "inherit_function": "0.1 * line_width if infill_sparse_density < 95 else 0.0",
                     "visible": false
                 },
                 "infill_wipe_dist": {
@@ -533,6 +623,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.04,
+                    "min_value_warning": "0",
+                    "max_value_warning": "machine_nozzle_size",
                     "visible": false
                 },
                 "infill_sparse_thickness": {
@@ -541,6 +633,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.1,
+                    "min_value": "0.0001",
+                    "max_value_warning": "0.32",
                     "visible": false,
                     "inherit_function": "layer_height"
                 },
@@ -563,7 +657,9 @@
                     "description": "Change the temperature for each layer automatically with the average flow speed of that layer.",
                     "type": "boolean",
                     "default": false,
-                    "visible": true
+                    "visible": false,
+                    "enabled": "False",
+                    "global_only": true
                 },
                 "material_print_temperature": {
                     "label": "Printing Temperature",
@@ -577,11 +673,12 @@
                 },
                 "material_flow_temp_graph": {
                     "label": "Flow Temperature Graph",
-                    "description": "Data linking material flow (in mm³/s) to temperature (°C).",
+                    "description": "Data linking material flow (in mm3 per second) to temperature (degrees Celsius).",
                     "unit": "",
                     "type": "string",
-                    "default": "[[0.1,180],[20,230]]",
-                    "enabled": "material_flow_dependent_temperature"
+                    "default": "[[3.5,200],[7.0,240]]",
+                    "enabled": "material_flow_dependent_temperature",
+                    "global_only": true
                 },
                 "material_standby_temperature": {
                     "label": "Standby Temperature",
@@ -590,7 +687,10 @@
                     "type": "float",
                     "default": 150,
                     "min_value": "0",
-                    "max_value_warning": "260"
+                    "max_value_warning": "260",
+                    "enabled": "False",
+                    "enabled_before_removal": "material_flow_dependent_temperature",
+                    "global_only": true
                 },
                 "material_extrusion_cool_down_speed": {
                     "label": "Extrusion Cool Down Speed Modifier",
@@ -599,7 +699,11 @@
                     "type": "float",
                     "default": 0.5,
                     "min_value": "0",
-                    "max_value_warning": "10.0"
+                    "max_value_warning": "10.0",
+                    "global_only": "True",
+                    "enabled": "False",
+                    "enabled_before_removal": "material_flow_dependent_temperature or machine_extruder_count > 1",
+                    "visible": false
                 },
                 "material_bed_temperature": {
                     "label": "Bed Temperature",
@@ -609,7 +713,8 @@
                     "default": 60,
                     "min_value": "0",
                     "max_value_warning": "260",
-                    "enabled": "machine_heated_bed"
+                    "enabled": "machine_heated_bed",
+                    "global_only": "True"
                 },
                 "material_diameter": {
                     "label": "Diameter",
@@ -617,8 +722,10 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 2.85,
+                    "min_value": "0.0001",
                     "min_value_warning": "0.4",
-                    "max_value_warning": "3.5"
+                    "max_value_warning": "3.5",
+                    "global_only": "True"
                 },
                 "material_flow": {
                     "label": "Flow",
@@ -643,6 +750,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 4.5,
+                    "min_value_warning": "-0.0001",
+                    "max_value_warning": "10.0",
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable"
@@ -653,6 +762,8 @@
                     "unit": "mm/s",
                     "type": "float",
                     "default": 25,
+                    "min_value": "0",
+                    "max_value_warning": "100",
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable",
@@ -663,6 +774,8 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 25,
+                            "min_value": "0",
+                            "max_value_warning": "100",
                             "visible": false,
                             "enabled": "retraction_enable"
                         },
@@ -672,6 +785,8 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 25,
+                            "min_value": "0",
+                            "max_value_warning": "100",
                             "visible": false,
                             "enabled": "retraction_enable"
                         }
@@ -683,6 +798,8 @@
                     "unit": "mm³",
                     "type": "float",
                     "default": 0,
+                    "min_value_warning": "-0.0001",
+                    "max_value_warning": "5.0",
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable"
@@ -693,6 +810,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 1.5,
+                    "min_value": "0",
+                    "max_value_warning": "10",
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable"
@@ -700,9 +819,10 @@
                 "retraction_count_max": {
                     "label": "Maximum Retraction Count",
                     "description": "This setting limits the number of retractions occurring within the Minimum Extrusion Distance Window. Further retractions within this window will be ignored. This avoids retracting repeatedly on the same piece of filament, as that can flatten the filament and cause grinding issues.",
-                    "default": 4,
+                    "default": 8,
+                    "min_value": "0",
+                    "max_value_warning": "100",
                     "type": "int",
-                    "min_value": 1,
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable"
@@ -713,7 +833,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 4.5,
-                    "min_value": 0.0,
+                    "min_value": "0",
+                    "max_value_warning": "retraction_amount * 2",
                     "visible": false,
                     "inherit_function": "retraction_amount",
                     "enabled": "retraction_enable"
@@ -724,6 +845,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0,
+                    "min_value_warning": "-0.0001",
+                    "max_value_warning": "10",
                     "visible": false,
                     "inherit": false,
                     "enabled": "retraction_enable"
@@ -817,9 +940,12 @@
                                     "unit": "mm/s",
                                     "type": "float",
                                     "default": 60,
+                                    "min_value": "0.1",
+                                    "max_value_warning": "150",
                                     "visible": false,
                                     "inherit": true,
-                                    "enabled": "support_roof_enable"
+                                    "enabled": "support_roof_enable",
+                                    "global_only": true
                                 },
                                 "speed_support_roof": {
                                     "label": "Support Roof Speed",
@@ -827,10 +953,13 @@
                                     "unit": "mm/s",
                                     "type": "float",
                                     "default": 40,
+                                    "min_value": "0.1",
+                                    "max_value_warning": "150",
                                     "visible": false,
                                     "inherit": false,
                                     "enabled": "support_roof_enable",
-                                    "inherit_function": "parent_value / 60 * 40"
+                                    "inherit_function": "parent_value / 60 * 40",
+                                    "global_only": true
                                 }
                             }
                         }
@@ -841,18 +970,20 @@
                     "description": "The speed at which travel moves are done. A well-built Ultimaker can reach speeds of 250mm/s, but some machines might have misaligned layers then.",
                     "unit": "mm/s",
                     "type": "float",
+                    "default": 120,
                     "min_value": "0.1",
                     "max_value_warning": "300",
-                    "default": 120,
-                    "inherit_function": "speed_print if magic_spiralize else 120"
+                    "inherit_function": "speed_print if magic_spiralize else 120",
+                    "global_only": true
                 },
                 "speed_layer_0": {
                     "label": "Bottom Layer Speed",
                     "description": "The print speed for the bottom layer: You want to print the first layer slower so it sticks better to the printer bed.",
                     "unit": "mm/s",
                     "type": "float",
-                    "min_value": "0.1",
                     "default": 30,
+                    "min_value": "0.1",
+                    "max_value_warning": "300",
                     "visible": false
                 },
                 "skirt_speed": {
@@ -860,18 +991,22 @@
                     "description": "The speed at which the skirt and brim are printed. Normally this is done at the initial layer speed, but sometimes you might want to print the skirt at a different speed.",
                     "unit": "mm/s",
                     "type": "float",
-                    "min_value": "0.1",
                     "default": 30,
+                    "min_value": "0.1",
+                    "max_value_warning": "300",
                     "visible": false,
-                    "inherit_function": "speed_layer_0"
+                    "inherit_function": "speed_layer_0",
+                    "global_only": true
                 },
                 "speed_slowdown_layers": {
                     "label": "Number of Slower Layers",
                     "description": "The first few layers are printed slower than the rest of the object, this to get better adhesion to the printer bed and improve the overall success rate of prints. The speed is gradually increased over these layers. 4 layers of speed-up is generally right for most materials and printers.",
                     "type": "int",
-                    "min_value": "0",
                     "default": 4,
-                    "visible": false
+                    "min_value": "0",
+                    "max_value_warning": "300",
+                    "visible": false,
+                    "global_only": true
                 }
             }
         },
@@ -885,7 +1020,8 @@
                     "description": "Combing keeps the head within the interior of the print whenever possible when traveling from one part of the print to another and does not use retraction. If combing is disabled, the print head moves straight from the start point to the end point and it will always retract.",
                     "type": "boolean",
                     "default": true,
-                    "visible": false
+                    "visible": false, 
+                    "global_only": true
                 },
                 "travel_avoid_other_parts": {
                     "label": "Avoid Printed Parts",
@@ -894,25 +1030,28 @@
                     "default": true,
                     "visible": false,
                     "enabled": "retraction_combing",
-                    "children": {
-                        "travel_avoid_distance": {
-                            "label": "Avoid Distance",
-                            "description": "The distance to stay clear of parts which are avoided during travel.",
-                            "unit": "mm",
-                            "type": "float",
-                            "default": 1.5,
-                            "visible": false,
-                            "inherit": false,
-                            "enabled": "retraction_combing"
-                        }
-                    }
+                    "global_only": "True"
+                },
+                "travel_avoid_distance": {
+                    "label": "Avoid Distance",
+                    "description": "The distance to stay clear of parts which are avoided during travel.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 1.5,
+                    "min_value": "0",
+                    "max_value_warning": "machine_nozzle_tip_outer_diameter * 5",
+                    "visible": false,
+                    "inherit": false,
+                    "enabled": "retraction_combing and travel_avoid_other_parts",
+                    "global_only": "True"
                 },
                 "coasting_enable": {
                     "label": "Enable Coasting",
                     "description": "Coasting replaces the last part of an extrusion path with a travel path. The oozed material is used to lay down the last piece of the extrusion path in order to reduce stringing.",
                     "type": "boolean",
                     "default": false,
-                    "visible": true
+                    "visible": false,
+                    "global_only": true
                 },
                 "coasting_volume": {
                     "label": "Coasting Volume",
@@ -920,63 +1059,24 @@
                     "unit": "mm³",
                     "type": "float",
                     "default": 0.064,
+                    "min_value": "0",
+                    "max_value_warning": "2.0",
                     "visible": false,
                     "inherit": false,
                     "enabled": "coasting_enable",
-                    "children": {
-                        "coasting_volume_retract": {
-                            "label": "Retract-Coasting Volume",
-                            "description": "The volume otherwise oozed in a travel move with retraction.",
-                            "unit": "mm³",
-                            "type": "float",
-                            "default": 0.064,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        },
-                        "coasting_volume_move": {
-                            "label": "Move-Coasting Volume",
-                            "description": "The volume otherwise oozed in a travel move without retraction.",
-                            "unit": "mm³",
-                            "type": "float",
-                            "default": 0.096,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        }
-                    }
+                    "global_only": true
                 },
                 "coasting_min_volume": {
                     "label": "Minimal Volume Before Coasting",
-                    "description": "The least volume an extrusion path should have to coast the full amount. For smaller extrusion paths, less pressure has been built up in the bowden tube and so the coasted volume is scaled linearly.",
+                    "description": "The least volume an extrusion path should have to coast the full amount. For smaller extrusion paths, less pressure has been built up in the bowden tube and so the coasted volume is scaled linearly. This value should always be larger than the Coasting Volume.",
                     "unit": "mm³",
                     "type": "float",
                     "default": 0.8,
+                    "min_value": "0",
+                    "max_value_warning": "10.0",
                     "visible": false,
-                    "inherit": false,
                     "enabled": "coasting_enable",
-                    "children": {
-                        "coasting_min_volume_retract": {
-                            "label": "Min Volume Retract-Coasting",
-                            "description": "The minimum volume an extrusion path must have in order to coast the full amount before doing a retraction.",
-                            "unit": "mm³",
-                            "type": "float",
-                            "default": 0.6,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        },
-                        "coasting_min_volume_move": {
-                            "label": "Min Volume Move-Coasting",
-                            "description": "The minimum volume an extrusion path must have in order to coast the full amount before doing a travel move without retraction.",
-                            "unit": "mm³",
-                            "type": "float",
-                            "default": 0.8,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        }
-                    }
+                    "global_only": true
                 },
                 "coasting_speed": {
                     "label": "Coasting Speed",
@@ -984,31 +1084,12 @@
                     "unit": "%",
                     "type": "float",
                     "default": 90,
+                    "min_value": "0.0001",
+                    "max_value_warning": "100",
                     "visible": false,
                     "inherit": false,
                     "enabled": "coasting_enable",
-                    "children": {
-                        "coasting_speed_retract": {
-                            "label": "Retract-Coasting Speed",
-                            "description": "The speed by which to move during coasting before a retraction, relative to the speed of the extrusion path.",
-                            "unit": "%",
-                            "type": "float",
-                            "default": 90,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        },
-                        "coasting_speed_move": {
-                            "label": "Move-Coasting Speed",
-                            "description": "The speed by which to move during coasting before a travel move without retraction, relative to the speed of the extrusion path.",
-                            "unit": "%",
-                            "type": "float",
-                            "default": 90,
-                            "visible": false,
-                            "inherit": true,
-                            "enabled": "coasting_enable"
-                        }
-                    }
+                    "global_only": true
                 }
             }
         },
@@ -1022,39 +1103,44 @@
                     "description": "Enable the cooling fan during the print. The extra cooling from the cooling fan helps parts with small cross sections that print each layer quickly.",
                     "type": "boolean",
                     "default": true,
+                    "global_only": "True"
+                },
+                "cool_fan_speed": {
+                    "label": "Fan Speed",
+                    "description": "Fan speed used for the print cooling fan on the printer head.",
+                    "unit": "%",
+                    "type": "float",
+                    "min_value": "0",
+                    "max_value": "100",
+                    "default": 100,
+                    "visible": false,
+                    "inherit_function": "100.0 if cool_fan_enabled else 0.0",
+                    "enabled": "cool_fan_enabled",
+                    "global_only": "True",
                     "children": {
-                        "cool_fan_speed": {
-                            "label": "Fan Speed",
-                            "description": "Fan speed used for the print cooling fan on the printer head.",
+                        "cool_fan_speed_min": {
+                            "label": "Minimum Fan Speed",
+                            "description": "Normally the fan runs at the minimum fan speed. If the layer is slowed down due to minimum layer time, the fan speed adjusts between minimum and maximum fan speed.",
                             "unit": "%",
                             "type": "float",
                             "min_value": "0",
                             "max_value": "100",
                             "default": 100,
                             "visible": false,
-                            "inherit_function": "100.0 if parent_value else 0.0",
-                            "children": {
-                                "cool_fan_speed_min": {
-                                    "label": "Minimum Fan Speed",
-                                    "description": "Normally the fan runs at the minimum fan speed. If the layer is slowed down due to minimum layer time, the fan speed adjusts between minimum and maximum fan speed.",
-                                    "unit": "%",
-                                    "type": "float",
-                                    "min_value": "0",
-                                    "max_value": "100",
-                                    "default": 100,
-                                    "visible": false
-                                },
-                                "cool_fan_speed_max": {
-                                    "label": "Maximum Fan Speed",
-                                    "description": "Normally the fan runs at the minimum fan speed. If the layer is slowed down due to minimum layer time, the fan speed adjusts between minimum and maximum fan speed.",
-                                    "unit": "%",
-                                    "type": "float",
-                                    "min_value": "0",
-                                    "max_value": "100",
-                                    "default": 100,
-                                    "visible": false
-                                }
-                            }
+                            "enabled": "cool_fan_enabled",
+                            "global_only": "True"
+                        },
+                        "cool_fan_speed_max": {
+                            "label": "Maximum Fan Speed",
+                            "description": "Normally the fan runs at the minimum fan speed. If the layer is slowed down due to minimum layer time, the fan speed adjusts between minimum and maximum fan speed.",
+                            "unit": "%",
+                            "type": "float",
+                            "min_value": "0",
+                            "max_value": "100",
+                            "default": 100,
+                            "visible": false,
+                            "enabled": "cool_fan_enabled",
+                            "global_only": "True"
                         }
                     }
                 },
@@ -1063,53 +1149,110 @@
                     "description": "The height at which the fan is turned on completely. For the layers below this the fan speed is scaled linearly with the fan off for the first layer.",
                     "unit": "mm",
                     "type": "float",
-                    "min_value": "0",
                     "default": 0.5,
+                    "min_value": "0",
+                    "max_value_warning": "10.0",
                     "visible": false,
+                    "global_only": "True",
                     "children": {
                         "cool_fan_full_layer": {
                             "label": "Fan Full on at Layer",
                             "description": "The layer number at which the fan is turned on completely. For the layers below this the fan speed is scaled linearly with the fan off for the first layer.",
                             "type": "int",
-                            "min_value": "0",
                             "default": 4,
+                            "min_value": "0",
+                            "max_value_warning": "100",
                             "visible": false,
-                            "inherit_function": "int((parent_value - layer_height_0 + 0.001) / layer_height)"
+                            "inherit_function": "int((parent_value - layer_height_0 + 0.001) / layer_height)",
+                            "global_only": "True"
                         }
                     }
                 },
                 "cool_min_layer_time": {
                     "label": "Minimum Layer Time",
-                    "description": "The minimum time spent in a layer: Gives the layer time to cool down before the next one is put on top. If a layer would print in less time, then the printer will slow down to make sure it has spent at least this many seconds printing the layer.",
+                    "description": "The minimum time spent in a layer. Gives fast layers extra time to cool down before printing the next layer. If a layer would print in less time, then the printer will slow down to make sure it has spent at least this many seconds printing the layer.",
                     "unit": "sec",
                     "type": "float",
-                    "min_value": "0",
                     "default": 5,
-                    "visible": false
+                    "min_value": "0",
+                    "max_value_warning": "600",
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "cool_min_layer_time_fan_speed_max": {
                     "label": "Minimum Layer Time Full Fan Speed",
                     "description": "The minimum time spent in a layer which will cause the fan to be at maximum speed. The fan speed increases linearly from minimum fan speed for layers taking the minimum layer time to maximum fan speed for layers taking the time specified here.",
                     "unit": "sec",
                     "type": "float",
-                    "min_value": "0",
                     "default": 10,
-                    "visible": false
+                    "min_value": "cool_min_layer_time",
+                    "max_value_warning": "600",
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "cool_min_speed": {
                     "label": "Minimum Speed",
-                    "description": "The minimum layer time can cause the print to slow down so much it starts to droop. The minimum feedrate protects against this. Even if a print gets slowed down it will never be slower than this minimum speed.",
+                    "description": "The minimum layer time can cause the print to slow down so much it starts to droop. The Minimum Speed protects against this. Even if a print gets slowed down it will never be slower than this minimum speed.",
                     "unit": "mm/s",
                     "type": "float",
                     "default": 10,
-                    "visible": false
+                    "min_value": "0",
+                    "max_value_warning": "100",
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "cool_lift_head": {
                     "label": "Lift Head",
-                    "description": "Lift the head away from the print if the minimum speed is hit because of cool slowdown, and wait the extra time away from the print surface until the minimum layer time is used up.",
+                    "description": "When the Minimum Speed is hit because of Minimum Layer Time, lift the head away from the print and wait the extra time until the minimum layer time is reached.",
                     "type": "boolean",
                     "default": false,
-                    "visible": false
+                    "visible": false,
+                    "global_only": "True"
+                },
+                "draft_shield_enabled": {
+                    "label": "Enable Draft Shield",
+                    "description": "Enable exterior draft shield. This will create a wall around the object which traps (hot) air and shields against gusts of wind. Especially useful for materials which warp easily.",
+                    "type": "boolean",
+                    "default": false,
+                    "global_only": true
+                },
+                "draft_shield_dist": {
+                    "label": "Draft Shield X/Y Distance",
+                    "description": "Distance of the draft shield from the print, in the X/Y directions.",
+                    "unit": "mm",
+                    "type": "float",
+                    "min_value": "0",
+                    "max_value_warning": "100",
+                    "default": 10,
+                    "visible": false,
+                    "enabled": "draft_shield_enabled",
+                    "global_only": true
+                },
+                "draft_shield_height_limitation": {
+                    "label": "Draft Shield Limitation",
+                    "description": "Whether or not to limit the height of the draft shield.",
+                    "type": "enum",
+                    "options": {
+                        "full": "Full",
+                        "limited": "Limited"
+                    },
+                    "default": "full",
+                    "visible": false,
+                    "enabled": "draft_shield_enabled",
+                    "global_only": true
+                },
+                "draft_shield_height": {
+                    "label": "Draft Shield Height",
+                    "description": "Height limitation on the draft shield. Above this height no draft shield will be printed.",
+                    "unit": "mm",
+                    "type": "float",
+                    "min_value": "0",
+                    "max_value_warning": "30",
+                    "default": 0,
+                    "inherit_function": "9999 if draft_shield_height_limitation == 'full' and draft_shield_enabled else 0.0",
+                    "visible": false,
+                    "enabled": "draft_shield_height_limitation == \"limited\"",
+                    "global_only": true
                 }
             }
         },
@@ -1122,7 +1265,7 @@
                     "label": "Enable Support",
                     "description": "Enable exterior support structures. This will build up supporting structures below the model to prevent the model from sagging or printing in mid air.",
                     "type": "boolean",
-                    "default": true
+                    "default": false
                 },
                 "support_type": {
                     "label": "Placement",
@@ -1142,7 +1285,7 @@
                     "type": "float",
                     "min_value": "0",
                     "max_value": "90",
-                    "default": 60,
+                    "default": 50,
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1187,9 +1330,10 @@
                             "min_value": "0",
                             "max_value_warning": "10",
                             "default": 0.1,
+                            "inherit_function": "0.1 if support_type == 'everywhere' else 0",
                             "type": "float",
                             "visible": false,
-                            "enabled": "support_enable"
+                            "enabled": "support_enable and support_type == 'everywhere'"
                         }
                     }
                 },
@@ -1207,20 +1351,24 @@
                     "unit": "°",
                     "type": "float",
                     "min_value": "-90",
+                    "min_value_warning": "-45",
+                    "max_value_warning": "45",
                     "max_value": "90",
                     "default": 30,
                     "visible": false,
-                    "enabled": "support_enable"
+                    "enabled": "support_conical_enabled and support_enable"
                 },
                 "support_conical_min_width": {
                     "label": "Minimal Width",
                     "description": "Minimal width to which conical support reduces the support areas. Small widths can cause the base of the support to not act well as foundation for support above.",
                     "unit": "mm",
+                    "default": 5.0,
                     "min_value": "0",
-                    "default": 3.0,
+                    "min_value_warning": "machine_nozzle_size * 3",
+                    "max_value_warning": "100.0",
                     "type": "float",
                     "visible": false,
-                    "enabled": "support_enable"
+                    "enabled": "support_conical_enabled and support_enable"
                 },
                 "support_bottom_stair_step_height": {
                     "label": "Stair Step Height",
@@ -1228,6 +1376,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.3,
+                    "min_value": "0",
+                    "max_value_warning": "1.0",
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1236,7 +1386,9 @@
                     "description": "The maximum distance between support blocks in the X/Y directions, so that the blocks will merge into a single block.",
                     "unit": "mm",
                     "type": "float",
-                    "default": 2,
+                    "default": 2.0,
+                    "min_value_warning": "0",
+                    "max_value_warning": "10",
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1246,6 +1398,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.2,
+                    "min_value_warning": "-0.5",
+                    "max_value_warning": "5.0",
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1255,6 +1409,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.6,
+                    "min_value": "0",
+                    "max_value_warning": "1.0",
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1272,6 +1428,8 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 1,
+                    "min_value": "0",
+                    "max_value_warning": "10",
                     "visible": false,
                     "enabled": "support_roof_enable"
                 },
@@ -1281,7 +1439,10 @@
                     "unit": "%",
                     "type": "float",
                     "default": 100,
+                    "min_value": "0",
+                    "max_value_warning": "100",
                     "enabled":"support_roof_enable",
+                    "global_only": true,
                     "children": {
                         "support_roof_line_distance": {
                             "label": "Support Roof Line Distance",
@@ -1289,9 +1450,11 @@
                             "unit": "mm",
                             "type": "float",
                             "default": 0.4,
+                            "min_value": "0",
                             "visible": false,
                             "inherit_function": "0 if parent_value == 0 else (support_roof_line_width * 100) / parent_value",
-                            "enabled": "support_roof_enable"
+                            "enabled": "support_roof_enable",
+                            "global_only": true
                         }
                     }
                 },
@@ -1308,22 +1471,14 @@
                         "zigzag": "Zig Zag"
                     },
                     "default": "concentric",
-                    "enabled": "support_roof_enable"
+                    "enabled": "support_roof_enable",
+                    "global_only": true
                 },
                 "support_use_towers": {
-                    "label": "Use towers.",
+                    "label": "Use towers",
                     "description": "Use specialized towers to support tiny overhang areas. These towers have a larger diameter than the region they support. Near the overhang the towers' diameter decreases, forming a roof.",
                     "type": "boolean",
                     "default": true,
-                    "visible": false,
-                    "enabled": "support_enable"
-                },
-                "support_minimal_diameter": {
-                    "label": "Minimum Diameter",
-                    "description": "Minimum diameter in the X/Y directions of a small area which is to be supported by a specialized support tower.",
-                    "unit": "mm",
-                    "type": "float",
-                    "default": 1,
                     "visible": false,
                     "enabled": "support_enable"
                 },
@@ -1332,9 +1487,24 @@
                     "description": "The diameter of a special tower.",
                     "unit": "mm",
                     "type": "float",
-                    "default": 1,
+                    "default": 3.0,
+                    "min_value": "0",
+                    "max_value_warning": "10",
                     "visible": false,
-                    "enabled": "support_enable"
+                    "enabled": "support_enable and support_use_towers"
+                },
+                "support_minimal_diameter": {
+                    "label": "Minimum Diameter",
+                    "description": "Minimum diameter in the X/Y directions of a small area which is to be supported by a specialized support tower.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 3.0,
+                    "min_value": "0",
+                    "max_value_warning": "10",
+                    "max_value": "support_tower_diameter",
+                    "inherit": true,
+                    "visible": false,
+                    "enabled": "support_enable and support_use_towers"
                 },
                 "support_tower_roof_angle": {
                     "label": "Tower Roof Angle",
@@ -1360,7 +1530,8 @@
                     },
                     "default": "zigzag",
                     "visible": false,
-                    "enabled": "support_enable"
+                    "enabled": "support_enable",
+                    "global_only": true
                 },
                 "support_connect_zigzags": {
                     "label": "Connect ZigZags",
@@ -1368,7 +1539,8 @@
                     "type": "boolean",
                     "default": true,
                     "visible": false,
-                    "enabled": "support_enable"
+                    "enabled": "support_enable",
+                    "global_only": true
                 },
                 "support_infill_rate": {
                     "label": "Fill Amount",
@@ -1376,11 +1548,11 @@
                     "unit": "%",
                     "type": "float",
                     "min_value": "0",
-                    "max_value": "100",
+                    "max_value_warning": "100",
                     "default": 15,
                     "visible": false,
                     "enabled": "support_enable",
-
+                    "global_only": true,
                     "children": {
                         "support_line_distance": {
                             "label": "Line distance",
@@ -1391,7 +1563,8 @@
                             "default": 2.66,
                             "visible": false,
                             "enabled": "support_enable",
-                            "inherit_function": "(support_line_width * 100) / parent_value"
+                            "inherit_function": "(support_line_width * 100) / parent_value",
+                            "global_only": true
                         }
                     }
                 }
@@ -1411,14 +1584,20 @@
                         "brim": "Brim",
                         "raft": "Raft"
                     },
-                    "default": "skirt"
+                    "default": "skirt",
+                    "inherit_function": "\"skirt\" if machine_heated_bed else \"brim\"",
+                    "global_only": "True"
                 },
                 "skirt_line_count": {
                     "label": "Skirt Line Count",
                     "description": "Multiple skirt lines help to prime your extrusion better for small objects. Setting this to 0 will disable the skirt.",
                     "type": "int",
                     "default": 1,
-                    "enabled": "adhesion_type == \"skirt\""
+                    "min_value": "0",
+                    "max_value_warning": "10",
+                    "enabled": "adhesion_type == \"skirt\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "skirt_gap": {
                     "label": "Skirt Distance",
@@ -1426,7 +1605,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 3,
-                    "enabled": "adhesion_type == \"skirt\""
+                    "min_value_warning": "0",
+                    "max_value_warning": "100",
+                    "enabled": "adhesion_type == \"skirt\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "skirt_minimal_length": {
                     "label": "Skirt Minimum Length",
@@ -1434,14 +1617,38 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 250,
-                    "enabled": "adhesion_type == \"skirt\""
+                    "min_value": "0",
+                    "min_value_warning": "25",
+                    "max_value_warning": "2500",
+                    "enabled": "adhesion_type == \"skirt\"",
+                    "global_only": "True",
+                    "visible": false
                 },
-                "brim_line_count": {
-                    "label": "Brim Line Count",
-                    "description": "The number of lines used for a brim: More lines means a larger brim which sticks better, but this also makes your effective print area smaller.",
-                    "type": "int",
-                    "default": 10,
-                    "enabled": "adhesion_type == \"brim\""
+                "brim_width": {
+                    "label": "Brim Width",
+                    "description": "The distance from the model to the end of the brim. A larger brim sticks better to the build platform, but also makes your effective print area smaller.",
+                    "type": "float",
+                    "unit": "mm",
+                    "default": 8.0,
+                    "min_value": "0.0",
+                    "max_value_warning": "100.0",
+                    "enabled": "adhesion_type == \"brim\"",
+                    "global_only": "True",
+                    "visible": true,
+                    "children": {
+                        "brim_line_count": {
+                            "label": "Brim Line Count",
+                            "description": "The number of lines used for a brim. More lines means a larger brim which sticks better to the build plate, but this also makes your effective print area smaller.",
+                            "type": "int",
+                            "default": 20,
+                            "min_value": "0",
+                            "max_value_warning": "300",
+                            "inherit_function": "math.ceil(parent_value / skirt_line_width)",
+                            "enabled": "adhesion_type == \"brim\"",
+                            "global_only": "True",
+                            "visible": false
+                        }
+                    }
                 },
                 "raft_margin": {
                     "label": "Raft Extra Margin",
@@ -1449,7 +1656,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 5,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value_warning": "0",
+                    "max_value_warning": "10",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_airgap": {
                     "label": "Raft Air-gap",
@@ -1457,14 +1668,22 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.35,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "1.0",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": true
                 },
                 "raft_surface_layers": {
                     "label": "Raft Top Layers",
                     "description": "The number of top layers on top of the 2nd raft layer. These are fully filled layers that the object sits on. 2 layers result in a smoother top surface than 1.",
                     "type": "int",
                     "default": 2,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "20",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": true
                 },
                 "raft_surface_thickness": {
                     "label": "Raft Top Layer Thickness",
@@ -1472,7 +1691,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.1,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "2.0",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_surface_line_width": {
                     "label": "Raft Top Line Width",
@@ -1480,7 +1703,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.3,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0.0001",
+                    "max_value_warning": "machine_nozzle_size * 2",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_surface_line_spacing": {
                     "label": "Raft Top Spacing",
@@ -1488,8 +1715,12 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.3,
+                    "min_value": "0.0001",
+                    "max_value_warning": "5.0",
                     "enabled": "adhesion_type == \"raft\"",
-                    "inherit_function": "raft_surface_line_width"
+                    "inherit_function": "raft_surface_line_width",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_interface_thickness": {
                     "label": "Raft Middle Thickness",
@@ -1497,7 +1728,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.27,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "5.0",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_interface_line_width": {
                     "label": "Raft Middle Line Width",
@@ -1505,7 +1740,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 1,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0.0001",
+                    "max_value_warning": "machine_nozzle_size * 2",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_interface_line_spacing": {
                     "label": "Raft Middle Spacing",
@@ -1513,7 +1752,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 1.0,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "15.0",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_base_thickness": {
                     "label": "Raft Base Thickness",
@@ -1521,7 +1764,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.3,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0",
+                    "max_value_warning": "5.0",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_base_line_width": {
                     "label": "Raft Base Line Width",
@@ -1529,7 +1776,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 1,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0.0001",
+                    "max_value_warning": "machine_nozzle_size * 2",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_base_line_spacing": {
                     "label": "Raft Line Spacing",
@@ -1537,7 +1788,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 3.0,
-                    "enabled": "adhesion_type == \"raft\""
+                    "min_value": "0.0001",
+                    "max_value_warning": "100",
+                    "enabled": "adhesion_type == \"raft\"",
+                    "global_only": "True",
+                    "visible": false
                 },
                 "raft_speed": {
                     "label": "Raft Print Speed",
@@ -1545,8 +1800,12 @@
                     "unit": "mm/s",
                     "type": "float",
                     "default": 30,
+                    "min_value": "0.1",
+                    "max_value_warning": "200",
                     "enabled": "adhesion_type == \"raft\"",
                     "inherit_function": "speed_print / 60 * 30",
+                    "global_only": "True",
+                    "visible": false,
                     "children": {
                         "raft_surface_speed": {
                             "label": "Raft Surface Print Speed",
@@ -1554,8 +1813,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 30,
+                            "min_value": "0.1",
+                            "max_value_warning": "100",
                             "enabled": "adhesion_type == \"raft\"",
-                            "inherit_function": "parent_value"
+                            "inherit_function": "parent_value",
+                            "global_only": "True",
+                            "visible": false
                         },
                         "raft_interface_speed": {
                             "label": "Raft Interface Print Speed",
@@ -1563,8 +1826,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 15,
+                            "min_value": "0.1",
+                            "max_value_warning": "150",
                             "enabled": "adhesion_type == \"raft\"",
-                            "inherit_function": "0.5 * parent_value"
+                            "inherit_function": "0.5 * parent_value",
+                            "global_only": "True",
+                            "visible": false
                         },
                         "raft_base_speed": {
                             "label": "Raft Base Print Speed",
@@ -1572,8 +1839,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 15,
+                            "min_value": "0.1",
+                            "max_value_warning": "200",
                             "enabled": "adhesion_type == \"raft\"",
-                            "inherit_function": "0.5 * parent_value"
+                            "inherit_function": "0.5 * parent_value",
+                            "global_only": "True",
+                            "visible": false
                         }
                     }
                 },
@@ -1585,6 +1856,7 @@
                     "min_value": "0",
                     "max_value": "100",
                     "default": 100,
+                    "global_only": "True",
                     "visible": false,
                     "enabled": "adhesion_type == \"raft\"",
                     "children": {
@@ -1596,6 +1868,7 @@
                             "min_value": "0",
                             "max_value": "100",
                             "default": 100,
+                            "global_only": "True",
                             "visible": false,
                             "inherit": true,
                             "enabled": "adhesion_type == \"raft\""
@@ -1608,6 +1881,7 @@
                             "min_value": "0",
                             "max_value": "100",
                             "default": 100,
+                            "global_only": "True",
                             "visible": false,
                             "inherit": true,
                             "enabled": "adhesion_type == \"raft\""
@@ -1620,52 +1894,12 @@
                             "min_value": "0",
                             "max_value": "100",
                             "default": 100,
+                            "global_only": "True",
                             "visible": false,
                             "inherit": true,
                             "enabled": "adhesion_type == \"raft\""
                         }
                     }
-                },
-                "draft_shield_enabled": {
-                    "label": "Enable Draft Shield",
-                    "description": "Enable exterior draft shield. This will create a wall around the object which traps (hot) air and shields against gusts of wind. Especially useful for materials which warp easily.",
-                    "type": "boolean",
-                    "default": false
-                },
-                "draft_shield_dist": {
-                    "label": "Draft Shield X/Y Distance",
-                    "description": "Distance of the draft shield from the print, in the X/Y directions.",
-                    "unit": "mm",
-                    "type": "float",
-                    "min_value": "0",
-                    "max_value_warning": "100",
-                    "default": 10,
-                    "visible": false,
-                    "enabled": "draft_shield_enabled"
-                },
-                "draft_shield_height_limitation": {
-                    "label": "Draft Shield Limitation",
-                    "description": "Whether or not to limit the height of the draft shield.",
-                    "type": "enum",
-                    "options": {
-                        "full": "Full",
-                        "limited": "Limited"
-                    },
-                    "default": "full",
-                    "visible": false,
-                    "enabled": "draft_shield_enabled"
-                },
-                "draft_shield_height": {
-                    "label": "Draft Shield Height",
-                    "description": "Height limitation on the draft shield. Above this height no draft shield will be printed.",
-                    "unit": "mm",
-                    "type": "float",
-                    "min_value": "0",
-                    "max_value_warning": "30",
-                    "default": 0,
-                    "inherit_function": "9999 if draft_shield_height_limitation == 'full' and draft_shield_enabled else 0.0",
-                    "visible": false,
-                    "enabled": "draft_shield_height_limitation == \"limited\""
                 }
             }
         },
@@ -1718,7 +1952,8 @@
                         "one_at_a_time": "One at a Time"
                     },
                     "default": "all_at_once",
-                    "visible": true
+                    "visible": true,
+                    "global_only": true
                 },
                 "magic_mesh_surface_mode": {
                     "label": "Surface Mode",
@@ -1729,15 +1964,16 @@
                         "surface": "Surface",
                         "both": "Both"
                     },
-                    "default": "Normal",
+                    "default": "normal",
                     "visible": false
                 },
                 "magic_spiralize": {
                     "label": "Spiralize Outer Contour",
-                    "description": "Spiralize smooths out the Z move of the outer edge. This will create a steady Z increase over the whole print. This feature turns a solid object into a single walled print with a solid bottom. This feature used to be called ‘Joris’ in older versions.",
+                    "description": "Spiralize smooths out the Z move of the outer edge. This will create a steady Z increase over the whole print. This feature turns a solid object into a single walled print with a solid bottom. This feature used to be called Joris in older versions.",
                     "type": "boolean",
                     "default": false,
-                    "visible": false
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "magic_fuzzy_skin_enabled": {
                     "label": "Fuzzy Skin",
@@ -1752,6 +1988,8 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.3,
+                    "min_value": "0",
+                    "max_value_warning": "wall_line_width_0",
                     "visible": false,
                     "enabled": "magic_fuzzy_skin_enabled"
                 },
@@ -1761,6 +1999,9 @@
                     "type": "float",
                     "unit": "1/mm",
                     "default": 1.25,
+                    "min_value_warning": "0.1",
+                    "max_value_warning": "10",
+                    "max_value": "10000",
                     "visible": false,
                     "enabled": "magic_fuzzy_skin_enabled",
                     "children": {
@@ -1770,6 +2011,8 @@
                             "type": "float",
                             "unit": "mm",
                             "default": 0.8,
+                            "min_value_warning": "0.0001",
+                            "max_value_warning": "10",
                             "inherit_function": "1/parent_value",
                             "visible": false,
                             "enabled": "magic_fuzzy_skin_enabled"
@@ -1781,7 +2024,8 @@
                     "description": "Print only the outside surface with a sparse webbed structure, printing 'in thin air'. This is realized by horizontally printing the contours of the model at given Z intervals which are connected via upward and diagonally downward lines.",
                     "type": "boolean",
                     "default": false,
-                    "visible": false
+                    "visible": false,
+                    "global_only": "True"
                 },
                 "wireframe_height": {
                     "label": "WP Connection Height",
@@ -1789,8 +2033,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 3,
+                    "min_value": "0.0001",
+                    "max_value_warning": "20",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_roof_inset": {
                     "label": "WP Roof Inset Distance",
@@ -1798,9 +2045,13 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 3,
+                    "min_value": "0",
+                    "min_value_warning": "machine_nozzle_size",
+                    "max_value_warning": "20",
                     "visible": false,
                     "enabled": "wireframe_enabled",
-                    "inherit_function": "wireframe_height"
+                    "inherit_function": "wireframe_height",
+                    "global_only": "True"
                 },
                 "wireframe_printspeed": {
                     "label": "WP speed",
@@ -1808,8 +2059,11 @@
                     "unit": "mm/s",
                     "type": "float",
                     "default": 5,
+                    "min_value": "0.1",
+                    "max_value_warning": "50",
                     "visible": false,
                     "enabled": "wireframe_enabled",
+                    "global_only": "True",
                     "children": {
                         "wireframe_printspeed_bottom": {
                             "label": "WP Bottom Printing Speed",
@@ -1817,9 +2071,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 5,
+                            "min_value": "0.1",
+                            "max_value_warning": "50",
                             "visible": false,
                             "inherit": true,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         },
                         "wireframe_printspeed_up": {
                             "label": "WP Upward Printing Speed",
@@ -1827,9 +2084,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 5,
+                            "min_value": "0.1",
+                            "max_value_warning": "50",
                             "visible": false,
                             "inherit": true,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         },
                         "wireframe_printspeed_down": {
                             "label": "WP Downward Printing Speed",
@@ -1837,9 +2097,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 5,
+                            "min_value": "0.1",
+                            "max_value_warning": "50",
                             "visible": false,
                             "inherit": true,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         },
                         "wireframe_printspeed_flat": {
                             "label": "WP Horizontal Printing Speed",
@@ -1847,9 +2110,12 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 5,
+                            "min_value": "0.1",
+                            "max_value_warning": "100",
                             "visible": false,
                             "inherit": true,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         }
                     }
                 },
@@ -1859,28 +2125,35 @@
                     "unit": "%",
                     "default": 100,
                     "min_value": "0",
-                    "max_value": "100",
+                    "max_value_warning": "100",
                     "type": "float",
                     "visible": false,
                     "enabled": "wireframe_enabled",
+                    "global_only": "True",
                     "children": {
                         "wireframe_flow_connection": {
                             "label": "WP Connection Flow",
                             "description": "Flow compensation when going up or down. Only applies to Wire Printing.",
                             "unit": "%",
                             "default": 100,
+                            "min_value": "0",
+                            "max_value_warning": "100",
                             "type": "float",
                             "visible": false,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         },
                         "wireframe_flow_flat": {
                             "label": "WP Flat Flow",
                             "description": "Flow compensation when printing flat lines. Only applies to Wire Printing.",
                             "unit": "%",
                             "default": 100,
+                            "min_value": "0",
+                            "max_value_warning": "100",
                             "type": "float",
                             "visible": false,
-                            "enabled": "wireframe_enabled"
+                            "enabled": "wireframe_enabled",
+                            "global_only": "True"
                         }
                     }
                 },
@@ -1890,8 +2163,11 @@
                     "unit": "sec",
                     "type": "float",
                     "default": 0,
+                    "min_value": "0",
+                    "max_value_warning": "1",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_bottom_delay": {
                     "label": "WP Bottom Delay",
@@ -1899,8 +2175,11 @@
                     "unit": "sec",
                     "type": "float",
                     "default": 0,
+                    "min_value": "0",
+                    "max_value_warning": "1",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_flat_delay": {
                     "label": "WP Flat Delay",
@@ -1908,8 +2187,11 @@
                     "unit": "sec",
                     "type": "float",
                     "default": 0.1,
+                    "min_value": "0",
+                    "max_value_warning": "0.5",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_up_half_speed": {
                     "label": "WP Ease Upward",
@@ -1917,8 +2199,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.3,
+                    "min_value": "0",
+                    "max_value_warning": "5.0",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_top_jump": {
                     "label": "WP Knot Size",
@@ -1926,8 +2211,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.6,
+                    "min_value": "0",
+                    "max_value_warning": "2.0",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_fall_down": {
                     "label": "WP Fall Down",
@@ -1935,8 +2223,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.5,
+                    "min_value": "0",
+                    "max_value_warning": "wireframe_height",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_drag_along": {
                     "label": "WP Drag along",
@@ -1944,8 +2235,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.6,
+                    "min_value": "0",
+                    "max_value_warning": "wireframe_height",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_strategy": {
                     "label": "WP Strategy",
@@ -1958,18 +2252,20 @@
                     },
                     "default": "compensate",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_straight_before_down": {
                     "label": "WP Straighten Downward Lines",
                     "description": "Percentage of a diagonally downward line which is covered by a horizontal line piece. This can prevent sagging of the top most point of upward lines. Only applies to Wire Printing.",
                     "type": "float",
                     "unit": "%",
-		    "min_value": "0",
-                    "max_value": "100",
                     "default": 20,
+                    "min_value": "0",
+                    "max_value": "100",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_roof_fall_down": {
                     "label": "WP Roof Fall Down",
@@ -1977,8 +2273,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 2,
+                    "min_value_warning": "0",
+                    "max_value_warning": "wireframe_roof_inset",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_roof_drag_along": {
                     "label": "WP Roof Drag Along",
@@ -1986,8 +2285,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 0.8,
+                    "min_value": "0",
+                    "max_value_warning": "10",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_roof_outer_delay": {
                     "label": "WP Roof Outer Delay",
@@ -1995,8 +2297,11 @@
                     "type": "float",
                     "unit": "sec",
                     "default": 0.2,
+                    "min_value": "0",
+                    "max_value_warning": "2.0",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 },
                 "wireframe_nozzle_clearance": {
                     "label": "WP Nozzle Clearance",
@@ -2004,8 +2309,11 @@
                     "type": "float",
                     "unit": "mm",
                     "default": 1,
+                    "min_value_warning": "0",
+                    "max_value_warning": "10.0",
                     "visible": false,
-                    "enabled": "wireframe_enabled"
+                    "enabled": "wireframe_enabled",
+                    "global_only": "True"
                 }
             }
         }
